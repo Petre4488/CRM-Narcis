@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Contract } from "@/types";
+import { Contract, Partener } from "@/types";
 import {
   Table,
   TableBody,
@@ -12,19 +12,29 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Building, Calendar, FileText } from "lucide-react";
 import { AddContractDialog } from "@/components/AddContractDialog";
-import { EditContractDialog } from "@/components/EditContractDialog";
+import { EditContractDialog } from "@/components/EditContractDialog"; // <--- Importam componenta de Edit
 
-export default function ContractsPage() {
+export default function ContractePage() {
   const [contracte, setContracte] = useState<Contract[]>([]);
+  const [parteneri, setParteneri] = useState<Partener[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchContracte = async () => {
+  // Incarcam Contracte + Parteneri (ca sa afisam numele clientului, nu ID-ul)
+  const fetchData = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/contracte/");
-      const data = await res.json();
-      if (Array.isArray(data)) setContracte(data);
+      const [resContracte, resParteneri] = await Promise.all([
+        fetch("http://127.0.0.1:8000/contracte/"),
+        fetch("http://127.0.0.1:8000/parteneri/")
+      ]);
+
+      const dataContracte = await resContracte.json();
+      const dataParteneri = await resParteneri.json();
+
+      if (Array.isArray(dataContracte)) setContracte(dataContracte);
+      if (Array.isArray(dataParteneri)) setParteneri(dataParteneri);
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -36,38 +46,41 @@ export default function ContractsPage() {
     if (!confirm("Sigur ștergi acest contract?")) return;
     try {
       const res = await fetch(`http://127.0.0.1:8000/contracte/${id}`, { method: "DELETE" });
-      if (res.ok) fetchContracte();
+      if (res.ok) fetchData();
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    fetchContracte();
+    fetchData();
   }, []);
 
-  // Funcție helper pentru culoarea statusului (ca să fie codul mai curat)
-  const getStatusBadgeColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "activ":
-        return "bg-emerald-500"; // Verdele din poză
-      case "expirat":
-        return "bg-red-500";     // Roșul din poză
-      case "anulat":
-        return "bg-slate-500";
-      default:
-        return "bg-gray-400";    // Draft sau altele
-    }
+  // Helper sa gasim numele partenerului dupa ID
+  const getPartenerName = (id: number) => {
+      const p = parteneri.find(item => item.id === id);
+      return p ? p.nume : "Client Necunoscut";
+  };
+
+  // Badge status
+  const getStatusBadge = (status: string) => {
+      switch(status) {
+          case 'activ': return <span className="bg-emerald-500 text-white px-2 py-1 rounded text-xs font-bold uppercase">Activ</span>;
+          case 'draft': return <span className="bg-slate-400 text-white px-2 py-1 rounded text-xs font-bold uppercase">Draft</span>;
+          case 'expirat': return <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold uppercase">Expirat</span>;
+          case 'anulat': return <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-bold uppercase">Anulat</span>;
+          default: return <span>{status}</span>;
+      }
   };
 
   return (
     <div className="font-sans">
-      <h1 className="text-3xl font-bold mb-6 text-slate-800">Gestiune Contracte</h1>
+      <h1 className="text-3xl font-bold mb-6 text-slate-800">Contracte & Legal</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Contracte Semnate</CardTitle>
-          <AddContractDialog onContractAdded={fetchContracte} />
+        <CardHeader className="text-black flex flex-row items-center justify-between">
+          <CardTitle>Listă Contracte</CardTitle>
+          <AddContractDialog onContractAdded={fetchData} />
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -75,11 +88,11 @@ export default function ContractsPage() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-slate-200 bg-slate-50">
-                  <TableHead className="font-bold text-slate-900 w-12.5">ID</TableHead>
+                <TableRow className="bg-slate-50">
                   <TableHead className="font-bold text-slate-900">Titlu Contract</TableHead>
+                  <TableHead className="font-bold text-slate-900">Client</TableHead>
+                  <TableHead className="font-bold text-slate-900">Dată Semnare</TableHead>
                   <TableHead className="font-bold text-slate-900">Valoare</TableHead>
-                  <TableHead className="font-bold text-slate-900">Data Semnării</TableHead>
                   <TableHead className="font-bold text-slate-900">Status</TableHead>
                   <TableHead className="font-bold text-slate-900 text-right">Acțiuni</TableHead>
                 </TableRow>
@@ -87,52 +100,58 @@ export default function ContractsPage() {
               <TableBody>
                 {contracte.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-slate-500">
-                      Nu există contracte înregistrate.
+                    <TableCell colSpan={6} className="text-black/80 text-center py-8 ">
+                      Nu există contracte.
                     </TableCell>
                   </TableRow>
                 ) : (
                   contracte.map((c) => (
                     <TableRow key={c.id} className="hover:bg-slate-50/50">
-                      <TableCell className="font-medium text-slate-700">{c.id}</TableCell>
                       
                       <TableCell className="font-medium text-slate-900">
-                        {c.nume_contract}
-                      </TableCell>
-                      
-                      {/* Valoarea Verde */}
-                      <TableCell className="text-emerald-600 font-bold">
-                        {c.valoare} RON
+                         <div className="flex items-center gap-2">
+                             <FileText className="h-4 w-4 text-emerald-600"/> {c.nume_contract}
+                         </div>
                       </TableCell>
                       
                       <TableCell className="text-slate-600">
-                        {c.data_semnarii}
+                         <div className="flex items-center gap-2">
+                             <Building className="h-3 w-3"/> {getPartenerName(c.partener_id)}
+                         </div>
                       </TableCell>
                       
-                      {/* Ecusonul Status */}
                       <TableCell>
-                        <span className={`px-3 py-1 rounded text-[11px] text-white uppercase font-bold tracking-wide ${getStatusBadgeColor(c.status)}`}>
-                          {c.status}
-                        </span>
+                         <div className="flex items-center gap-2 text-black">
+                             <Calendar className="h-3 w-3 text-slate-600"/> {c.data_semnarii}
+                         </div>
                       </TableCell>
-                      
-                      {/* Acțiuni - Butoane Ghost (fără fundal colorat, doar iconiță) */}
+
+                      <TableCell className="font-bold text-emerald-700">
+                         {c.valoare} RON
+                      </TableCell>
+
+                      <TableCell>
+                         {getStatusBadge(c.status)}
+                      </TableCell>
+
+                      {/* COLOANA ACTIUNI */}
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-1">
-                          
-                          <EditContractDialog 
-                            contract={c} 
-                            onContractUpdated={fetchContracte} 
-                          />
+                            
+                            {/* 👇 AICI E FIX-UL: Folosim prop-ul `onUpdate`, nu `onContractUpdated` */}
+                            <EditContractDialog 
+                                contract={c} 
+                                onUpdate={fetchData} 
+                            />
 
-                          <Button
-                            variant="ghost" // Asta îl face transparent, ca în poză
-                            size="icon"     // Îl face mic și pătrat
-                            className="h-8 w-8 text-gray-500 hover:text-red-600 hover:bg-red-50 cursor-pointer" // Se înroșește doar la hover
-                            onClick={() => handleDelete(c.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-black h-8 w-8 hover:text-red-600 hover:bg-red-50"
+                                onClick={() => handleDelete(c.id)}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
                         </div>
                       </TableCell>
                     </TableRow>

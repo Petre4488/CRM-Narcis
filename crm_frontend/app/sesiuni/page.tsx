@@ -56,7 +56,7 @@ export default function SesiuniPage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Orar & Sesiuni</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Calendar Activități</CardTitle>
           <AddSesiuneDialog onSesiuneAdded={fetchData} />
         </CardHeader>
@@ -75,7 +75,7 @@ export default function SesiuniPage() {
               </TableHeader>
               <TableBody>
                 {sesiuni.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-8">Nu există sesiuni planificate.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} className="text-black/80 text-center py-8">Nu există sesiuni planificate.</TableCell></TableRow>
                 ) : (
                   sesiuni.map((s) => (
                     <TableRow key={s.id} className="hover:bg-slate-50/50">
@@ -88,7 +88,7 @@ export default function SesiuniPage() {
                       
                       <TableCell className="font-bold text-violet-700">{getGrupaName(s.grupa_id)}</TableCell>
                       
-                      <TableCell>{getProfName(s.profesor_id)}</TableCell>
+                      <TableCell className="text-black" >{getProfName(s.profesor_id)}</TableCell>
                       
                       <TableCell>
                         <div className="flex items-center gap-1 text-slate-500">
@@ -98,7 +98,7 @@ export default function SesiuniPage() {
 
                       <TableCell>
                          <div className="flex flex-col">
-                            <span className="text-sm font-medium">{s.tema_lectiei || "-"}</span>
+                            <span className="text-sm font-medium text-black/60">{s.tema_lectiei || "-"}</span>
                             <span className={`text-[10px] uppercase font-bold w-fit px-1.5 py-0.5 rounded text-white mt-1
                                 ${s.status_sesiune === 'planificata' ? 'bg-blue-400' : 
                                   s.status_sesiune === 'realizata' ? 'bg-emerald-500' : 'bg-red-400'}`}>
@@ -118,7 +118,7 @@ export default function SesiuniPage() {
                             />
 
                             {/* Buton STERGE */}
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => handleDelete(s.id)}>
+                            <Button variant="ghost" size="icon" className="cursor-pointer text-black h-8 w-8 hover:text-red-600" onClick={() => handleDelete(s.id)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>

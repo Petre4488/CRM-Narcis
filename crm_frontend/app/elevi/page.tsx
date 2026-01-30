@@ -46,7 +46,7 @@ export default function EleviPage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Elevi & Înscrieri</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Bază de date Elevi</CardTitle>
           <AddElevDialog onElevAdded={fetchElevi} />
         </CardHeader>
@@ -65,10 +65,10 @@ export default function EleviPage() {
               </TableHeader>
               <TableBody>
                 {elevi.length === 0 ? (
-                  <TableRow><TableCell colSpan={6} className="text-center py-8">Nu există elevi.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={6} className="text-black/80 text-center py-8">Nu există elevi.</TableCell></TableRow>
                 ) : (
                   elevi.map((e) => (
-                    <TableRow key={e.id} className="hover:bg-slate-50/50">
+                    <TableRow key={e.id} className="text-black hover:bg-slate-50/50">
                       <TableCell className="font-medium flex items-center gap-2">
                         <User className="h-4 w-4 text-sky-500"/> {e.nume_complet}
                       </TableCell>
@@ -90,7 +90,7 @@ export default function EleviPage() {
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-1">
                             <EditElevDialog elev={e} onElevUpdated={fetchElevi} />
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => handleDelete(e.id)}>
+                            <Button variant="ghost" size="icon" className="cursor-pointer h-8 w-8 hover:text-red-600" onClick={() => handleDelete(e.id)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>

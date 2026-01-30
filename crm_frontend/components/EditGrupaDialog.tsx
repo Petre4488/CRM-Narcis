@@ -97,7 +97,7 @@ export function EditGrupaDialog({ grupa, onGrupaUpdated }: EditGrupaProps) {
         <div className="bg-violet-50 p-6 border-b border-violet-100">
             <DialogHeader>
                 <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-slate-900">
-                    <div className="bg-white p-2 rounded-lg shadow-sm text-violet-600">
+                    <div className="cursor-pointer bg-white p-2 rounded-lg shadow-sm text-violet-600">
                         <Pencil className="h-5 w-5 fill-violet-100" />
                     </div>
                     Editare Grupă

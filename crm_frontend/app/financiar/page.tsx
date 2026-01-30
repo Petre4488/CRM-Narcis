@@ -48,7 +48,7 @@ export default function FinanciarPage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Financiar</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Facturi Emise</CardTitle>
           <AddFacturaDialog onFacturaAdded={fetchFacturi} />
         </CardHeader>
@@ -68,7 +68,7 @@ export default function FinanciarPage() {
               </TableHeader>
               <TableBody>
                 {facturi.length === 0 ? (
-                  <TableRow><TableCell colSpan={7} className="text-center py-8">Nu există facturi înregistrate.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={7} className="text-black/80 text-center py-8">Nu există facturi înregistrate.</TableCell></TableRow>
                 ) : (
                   facturi.map((f) => (
                     <TableRow key={f.id} className="hover:bg-slate-50/50">
@@ -81,7 +81,7 @@ export default function FinanciarPage() {
                       
                       <TableCell className="font-bold text-slate-700">{f.client_nume}</TableCell>
                       
-                      <TableCell>{f.data_emitere}</TableCell>
+                      <TableCell className="text-black" >{f.data_emitere}</TableCell>
                       
                       <TableCell className={f.status === 'scadenta_depasita' ? "text-red-600 font-bold" : "text-slate-600"}>
                         {f.data_scadenta}
@@ -103,7 +103,7 @@ export default function FinanciarPage() {
                                 onFacturaUpdated={fetchFacturi} 
                             />
 
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => handleDelete(f.id)}>
+                            <Button variant="ghost" size="icon" className=" cursor-pointer text-black h-8 w-8 hover:text-red-600" onClick={() => handleDelete(f.id)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>

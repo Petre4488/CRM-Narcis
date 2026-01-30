@@ -104,3 +104,63 @@ export interface Factura {
   moneda: string;
   status: string; // draft, emisa, platita, etc.
 }
+
+export interface Inscriere {
+  id: number;
+  grupa_id: number;
+  elev_id: number;
+  data_inscriere: string;
+  status_inscriere: string; // activ, retras, in_asteptare
+  tip_plata: string;
+  reducere_percent: number;
+  note: string;
+}
+
+export interface CatalogItem {
+  elev_id: number;
+  nume_elev: string;
+  inscriere_id: number;
+  prezenta_id: number | null;
+  is_prezent: boolean;
+  motiv_absenta: string | null;
+  note: string | null;
+  rating_profesor: number; // 0 = normal, 5 = star player
+}
+
+export interface Produs {
+  id: number;
+  nume_produs: string;
+  cod_sku: string;
+  categorie: string;
+  unitate_masura: string;
+  cost_unitar_mediu: number;
+  note: string;
+  stoc_curent: number; // Vine calculat din backend
+}
+
+export interface MiscareStoc {
+  id: number;
+  produs_id: number;
+  tip: string; // achizitie_in, consum_out
+  cantitate: number;
+  data_miscare: string;
+}
+
+export interface Settings {
+  id: number;
+  nume_institutiei: string;
+  adresa_fizica: string;
+  email_contact: string;
+  telefon_contact: string;
+  an_scolar_curent: string;
+  
+  nume_legala_firma: string;
+  cui: string;
+  reg_com: string;
+  banca: string;
+  iban: string;
+  serie_facturi: string;
+  numar_curent_factura: number;
+  moneda_default: string;
+  tva_percent: number;
+}

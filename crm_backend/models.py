@@ -158,6 +158,7 @@ class Lead(Base):
     campanie = relationship("Campanie", back_populates="leads")
     partener = relationship("Partener", back_populates="leads")
     contract = relationship("Contract", back_populates="lead", uselist=False)
+    created_at = Column(DateTime, default=datetime.now)
 
 class Contract(Base):
     __tablename__ = "contracte"
@@ -321,6 +322,7 @@ class Sesiune(Base):
     profesor = relationship("Profesor", back_populates="sesiuni")
     prezente = relationship("Prezenta", back_populates="sesiune")
     miscari_stoc = relationship("MiscareStoc", back_populates="sesiune")
+    google_event_id = Column(String, nullable=True)
 
 class Prezenta(Base):
     __tablename__ = "prezente"
@@ -527,3 +529,41 @@ class Task(Base):
     contract = relationship("Contract", back_populates="tasks")
     profesor = relationship("Profesor", back_populates="tasks")
     grupa = relationship("Grupa", back_populates="tasks")
+    
+# ===================================================
+# 10. SETARI
+# ===================================================
+
+class Settings(Base):
+    __tablename__ = "settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # 1. General
+    nume_institutiei = Column(String, default="Scoala Mea")
+    adresa_fizica = Column(String, nullable=True)
+    email_contact = Column(String, nullable=True)
+    telefon_contact = Column(String, nullable=True)
+    an_scolar_curent = Column(String, default="2025-2026")
+
+    # 2. Financiar
+    nume_legala_firma = Column(String, nullable=True)
+    cui = Column(String, nullable=True)
+    reg_com = Column(String, nullable=True)
+    banca = Column(String, nullable=True)
+    iban = Column(String, nullable=True)
+    serie_facturi = Column(String, default="EDU")
+    numar_curent_factura = Column(Integer, default=1)
+    moneda_default = Column(String, default="RON")
+    tva_percent = Column(Float, default=0.0)
+    
+
+class GoogleToken(Base):
+    __tablename__ = "google_tokens"
+    id = Column(Integer, primary_key=True, index=True)
+    access_token = Column(String)
+    refresh_token = Column(String)
+    token_uri = Column(String)
+    client_id = Column(String)
+    client_secret = Column(String)
+    scopes = Column(String) # salvat ca JSON string sau text

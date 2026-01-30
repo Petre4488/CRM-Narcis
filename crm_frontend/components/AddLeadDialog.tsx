@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +18,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue, // <--- AM READUS SELECTVALUE (E IMPORTAT)
+  SelectValue,
 } from "@/components/ui/select";
+import { UserPlus, Building, Phone, Mail, Globe, Plus, Target } from "lucide-react";
 import { Partener } from "@/types";
 
 export function AddLeadDialog({ onLeadAdded }: { onLeadAdded: () => void }) {
@@ -89,93 +91,116 @@ export function AddLeadDialog({ onLeadAdded }: { onLeadAdded: () => void }) {
     }
   };
 
+  const labelStyle = "flex items-center gap-2 text-slate-700 text-sm font-semibold mb-1.5";
+  const inputStyle = "bg-white border-slate-300 text-slate-900 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 h-10 shadow-sm";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-          + Adaugă Lead
+        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30 gap-2 px-6 rounded-full cursor-pointer">
+          <Plus className="h-4 w-4" /> Adaugă Lead
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-106.25">
-        <DialogHeader>
-          <DialogTitle>Lead Nou</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-150 bg-white border border-slate-200 shadow-2xl p-0 overflow-hidden rounded-2xl">
+        <div className="bg-emerald-50 p-6 border-b border-emerald-100">
+            <DialogHeader>
+                <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-slate-900">
+                    <div className="bg-white p-2 rounded-lg shadow-sm text-emerald-600">
+                        <UserPlus className="h-5 w-5 fill-emerald-100" />
+                    </div>
+                    Lead Nou
+                </DialogTitle>
+                <DialogDescription className="text-slate-600">
+                    Înregistrează un potențial client în sistem.
+                </DialogDescription>
+            </DialogHeader>
+        </div>
 
-        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6 bg-white">
           
-          {/* --- PARTENER --- */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Partener</Label>
-            <div className="col-span-3">
-              <Select 
-                // TRUCUL CARE REZOLVA SUPRAPUNEREA:
-                // Daca e string gol "", trimitem undefined.
-                // Asta ii zice componentei: "Nu e nimic selectat, arata placeholder-ul".
-                value={formData.partener_id || undefined} 
-                onValueChange={(val) => setFormData({...formData, partener_id: val})}
-              >
-                <SelectTrigger>
-                  {/* Folosim prop-ul placeholder, NU scriem text intre tag-uri */}
-                  <SelectValue placeholder="Alege instituția..." />
-                </SelectTrigger>
-                <SelectContent className="bg-blue-500">
-                  {parteneri.map((p) => (
-                    <SelectItem  className="hover:bg-blue-600 cursor-pointer" key={p.id} value={p.id.toString()}>
-                      {p.nume} ({p.oras})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* PARTENER & NUME CONTACT */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <Label className={labelStyle}><Building className="h-3.5 w-3.5"/> Partener (Instituție)</Label>
+                <Select 
+                    value={formData.partener_id || undefined} 
+                    onValueChange={(val) => setFormData({...formData, partener_id: val})}
+                >
+                    <SelectTrigger className={inputStyle}>
+                        <SelectValue placeholder="Alege instituția..." />
+                    </SelectTrigger>
+                    <SelectContent className="bg-emerald-400">
+                        {parteneri.map((p) => (
+                        <SelectItem className="hover:bg-emerald-500 cursor-pointer" key={p.id} value={p.id.toString()}>
+                            {p.nume} ({p.oras})
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="nume" className={labelStyle}><UserPlus className="h-3.5 w-3.5"/> Nume Pers. Contact</Label>
+                <Input 
+                    id="nume" 
+                    value={formData.nume_contact} 
+                    onChange={(e) => setFormData({...formData, nume_contact: e.target.value})} 
+                    className={inputStyle} required 
+                />
+              </div>
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="nume" className="text-right">Nume</Label>
-            <Input 
-              id="nume" 
-              value={formData.nume_contact} 
-              onChange={(e) => setFormData({...formData, nume_contact: e.target.value})} 
-              className="col-span-3" required 
-            />
-          </div>
-
-          {/* --- SURSA --- */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Sursă</Label>
-            <div className="col-span-3">
-              <Select 
-                // ACELASI TRUC SI AICI
+          {/* SURSA & STATUS (Status e setat default, dar putem pune sursa full width sau grid) */}
+          <div>
+            <Label className={labelStyle}><Target className="h-3.5 w-3.5"/> Sursă Lead</Label>
+            <Select 
                 value={formData.sursa_lead || undefined}
                 onValueChange={(val) => setFormData({...formData, sursa_lead: val})}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Alege sursa..." />
+            >
+                <SelectTrigger className={inputStyle}>
+                    <SelectValue placeholder="Alege sursa..." />
                 </SelectTrigger>
-                <SelectContent className="bg-blue-500">
-                  <SelectItem  className="hover:bg-blue-600 cursor-pointer" value="facebook">Facebook Ads</SelectItem>
-                  <SelectItem  className="hover:bg-blue-600 cursor-pointer" value="google">Google Search</SelectItem>
-                  <SelectItem  className="hover:bg-blue-600 cursor-pointer" value="recomandare">Recomandare</SelectItem>
-                  <SelectItem  className="hover:bg-blue-600 cursor-pointer" value="linkedin">LinkedIn</SelectItem>
-                  <SelectItem  className="hover:bg-blue-600 cursor-pointer" value="rece">Apel la Rece</SelectItem>
+                <SelectContent className="bg-emerald-400">
+                    <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="facebook">Facebook Ads</SelectItem>
+                    <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="google">Google Search</SelectItem>
+                    <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="recomandare">Recomandare</SelectItem>
+                    <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="linkedin">LinkedIn</SelectItem>
+                    <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="rece">Apel la Rece</SelectItem>
                 </SelectContent>
-              </Select>
-            </div>
+            </Select>
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tel" className="text-right">Telefon</Label>
-            <Input 
-              id="tel" 
-              value={formData.telefon_contact} 
-              onChange={(e) => setFormData({...formData, telefon_contact: e.target.value})} 
-              className="col-span-3" 
-            />
+          {/* TELEFON & EMAIL */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <Label htmlFor="tel" className={labelStyle}><Phone className="h-3.5 w-3.5"/> Telefon</Label>
+                <Input 
+                    id="tel" 
+                    value={formData.telefon_contact} 
+                    onChange={(e) => setFormData({...formData, telefon_contact: e.target.value})} 
+                    className={inputStyle} 
+                />
+              </div>
+              <div>
+                 {/* Campul Email nu era in form-ul anterior in JSX, dar e in state. Il adaug aici. */}
+                 <Label htmlFor="email" className={labelStyle}><Mail className="h-3.5 w-3.5"/> Email</Label>
+                 <Input 
+                    id="email" 
+                    type="email"
+                    value={formData.email_contact} 
+                    onChange={(e) => setFormData({...formData, email_contact: e.target.value})} 
+                    className={inputStyle} 
+                />
+              </div>
           </div>
 
           <DialogFooter>
-            <Button type="submit" disabled={loading} className="bg-blue-500 hover:bg-blue-600 cursor-pointer">
-              {loading ? "Se salvează..." : "Salvează Lead"}
+            <Button className="cursor-pointer bg-emerald-800/10 text-emerald-900 hover:bg-red-50 hover:text-red-600" type="button" variant="ghost" onClick={() => setOpen(false)}>
+                Anulează
+            </Button>
+            <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md cursor-pointer">
+                {loading ? "..." : "Salvează Lead"}
             </Button>
           </DialogFooter>
         </form>

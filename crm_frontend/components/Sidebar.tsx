@@ -9,7 +9,7 @@ export function Sidebar() {
 
   // Lista de link-uri din meniu
   const menuItems = [
-    { name: "Parteneri", href: "/", icon: Users },
+    { name: "Parteneri", href: "/parteneri", icon: Users },
     { name: "Lead-uri", href: "/leaduri", icon: Target },
     { name: "Contracte", href: "/contracte", icon: FileText },
     { name: "Profesori", href: "/profesori", icon: GraduationCap},
@@ -18,16 +18,23 @@ export function Sidebar() {
     { name: "Grupe", href: "/grupe", icon: Group},
     { name: "Sesiuni", href: "/sesiuni", icon: NotebookTabs},
     { name: "Financiar", href: "/financiar", icon: PiggyBank},
+    { name: "Inscrieri", href: "/inscrieri", icon: PiggyBank},
+    { name: "Catalog", href: "/catalog", icon: PiggyBank},
+    { name: "Inventar", href: "/inventar", icon: PiggyBank},
     { name: "Setări", href: "/setari", icon: Settings },
   ];
 
   return (
     <div className="h-screen w-64 bg-slate-900 text-white flex flex-col fixed left-0 top-0 border-r border-slate-800">
       <div className="p-6 border-b border-slate-800">
-        <h1 className="text-2xl font-bold text-blue-500">EduCRM 🚀</h1>
+        <Link href="/">
+          <h1 className="text-2xl font-bold text-blue-500 cursor-pointer hover:text-blue-400 transition-colors">
+            EduCRM 🚀
+          </h1>
+        </Link>
       </div>
       
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (

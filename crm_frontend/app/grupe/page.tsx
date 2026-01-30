@@ -64,7 +64,7 @@ export default function GrupePage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Grupe de Studiu</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Orar & Grupe Active</CardTitle>
           <AddGrupaDialog onGrupaAdded={fetchData} />
         </CardHeader>
@@ -84,7 +84,7 @@ export default function GrupePage() {
               </TableHeader>
               <TableBody>
                 {grupe.length === 0 ? (
-                  <TableRow><TableCell colSpan={7} className="text-center py-8">Nu există grupe create.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={7} className="text-black/80 text-center py-8">Nu există grupe create.</TableCell></TableRow>
                 ) : (
                   grupe.map((g) => (
                     <TableRow key={g.id} className="hover:bg-slate-50/50">
@@ -95,7 +95,7 @@ export default function GrupePage() {
                         </div>
                       </TableCell>
                       
-                      <TableCell>{getCursName(g.curs_id)}</TableCell>
+                      <TableCell className="text-black" >{getCursName(g.curs_id)}</TableCell>
                       
                       <TableCell className="text-slate-600">{getProfName(g.profesor_titular_id)}</TableCell>
                       
@@ -129,7 +129,7 @@ export default function GrupePage() {
                             />
 
                             {/* Buton STERGE */}
-                            <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-600" onClick={() => handleDelete(g.id)}>
+                            <Button variant="ghost" size="icon" className="cursor-pointer text-black h-8 w-8 hover:text-red-600" onClick={() => handleDelete(g.id)}>
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>

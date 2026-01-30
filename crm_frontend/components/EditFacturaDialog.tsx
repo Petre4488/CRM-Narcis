@@ -59,7 +59,7 @@ export function EditFacturaDialog({ factura, onFacturaUpdated }: EditFacturaProp
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-black hover:bg-slate-100">
+        <Button variant="ghost" size="icon" className=" cursor-pointer h-8 w-8 text-black hover:bg-slate-100">
             <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -124,20 +124,21 @@ export function EditFacturaDialog({ factura, onFacturaUpdated }: EditFacturaProp
                         <Label className="text-xs font-semibold text-slate-500 mb-1.5">Status Factură</Label>
                         <Select value={formData.status} onValueChange={v => setFormData({...formData, status: v})}>
                             <SelectTrigger className="bg-white border-slate-300"><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="draft">Draft (Ciornă)</SelectItem>
-                                <SelectItem value="emisa">Emisă</SelectItem>
-                                <SelectItem value="platita_integral">Plătită Integral</SelectItem>
-                                <SelectItem value="scadenta_depasita">Scadență Depășită</SelectItem>
-                                <SelectItem value="anulata">Anulată</SelectItem>
+                            <SelectContent className="bg-emerald-400">
+                                <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="draft">Draft (Ciornă)</SelectItem>
+                                <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="emisa">Emisă</SelectItem>
+                                <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="platita_integral">Plătită Integral</SelectItem>
+                                <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="scadenta_depasita">Scadență Depășită</SelectItem>
+                                <SelectItem className="hover:bg-emerald-500 cursor-pointer" value="anulata">Anulată</SelectItem>
                             </SelectContent>
+                            
                         </Select>
                     </div>
                 </div>
             </div>
 
             <DialogFooter>
-                <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Anulează</Button>
+                <Button type="button" className="cursor-pointer text-emerald-900 hover:bg-red-50 hover:text-red-600" variant="ghost" onClick={() => setOpen(false)}>Anulează</Button>
                 <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
                     {loading ? "..." : "Salvează Modificările"}
                 </Button>

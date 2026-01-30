@@ -34,7 +34,7 @@ export default function CursuriPage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Curriculum & Materii</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Cursuri Disponibile</CardTitle>
           <AddCursDialog onCursAdded={fetchCursuri} />
         </CardHeader>
@@ -52,7 +52,7 @@ export default function CursuriPage() {
               </TableHeader>
               <TableBody>
                 {cursuri.length === 0 ? (
-                  <TableRow><TableCell colSpan={5} className="text-center py-8">Nu există cursuri.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={5} className="text-black/70 text-center py-8">Nu există cursuri.</TableCell></TableRow>
                 ) : (
                   cursuri.map((c) => (
                     <TableRow key={c.id} className="hover:bg-slate-50/50">
@@ -70,13 +70,13 @@ export default function CursuriPage() {
                         <div className="flex justify-end items-center gap-1">
                             
                             {/* Buton EDIT (Componenta noua) */}
-                            <EditCursDialog curs={c} onCursUpdated={fetchCursuri} />
+                            <EditCursDialog curs={c} onUpdate={fetchCursuri} />
 
                             {/* Buton STERGE */}
                             <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-8 w-8 hover:text-red-600 hover:bg-red-50" 
+                                className="text-black h-8 w-8 hover:text-red-600 hover:bg-red-50" 
                                 onClick={() => handleDelete(c.id)}
                             >
                                 <Trash2 className="h-4 w-4" />

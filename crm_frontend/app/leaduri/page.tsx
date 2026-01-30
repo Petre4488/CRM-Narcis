@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { AddLeadDialog } from "@/components/AddLeadDialog";
+import { EditLeadDialog } from "@/components/EditLeadDialog"; // <--- IMPORTAT
 
 export default function LeadsPage() {
   const [leaduri, setLeaduri] = useState<Lead[]>([]);
@@ -25,23 +26,20 @@ export default function LeadsPage() {
       const response = await fetch("http://127.0.0.1:8000/leaduri/");
       const data = await response.json();
       
-      console.log("Ce a venit de la Python:", data); // <--- Verificam in consola
-
-      // VERIFICARE DE SIGURANTA: Este 'data' o lista?
       if (Array.isArray(data)) {
         setLeaduri(data);
       } else {
-        console.error("API-ul nu a trimis o lista corecta!", data);
-        setLeaduri([]); // Punem lista goala ca sa nu crape .map
+        setLeaduri([]); 
       }
 
     } catch (error) {
       console.error("Eroare:", error);
-      setLeaduri([]); // In caz de eroare grava, lista goala
+      setLeaduri([]);
     } finally {
       setLoading(false);
     }
   };
+
   // Delete Function
   const handleDelete = async (id: number) => {
     if (!confirm("Sigur ștergi acest lead?")) return;
@@ -76,7 +74,6 @@ export default function LeadsPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-black">Lead-uri Active</CardTitle>
-          {/* Aici vom pune butonul de AddLead mai tarziu */}
           <AddLeadDialog onLeadAdded={fetchLeaduri} />
         </CardHeader>
         <CardContent>
@@ -102,7 +99,7 @@ export default function LeadsPage() {
                   </TableRow>
                 ) : (
                   leaduri.map((lead) => (
-                    <TableRow className="text-black" key={lead.id}>
+                    <TableRow className="text-black hover:bg-slate-50" key={lead.id}>
                       <TableCell className="font-medium">{lead.nume_contact}</TableCell>
                       <TableCell className="capitalize">{lead.sursa_lead || "-"}</TableCell>
                       <TableCell>{lead.telefon_contact || "-"}</TableCell>
@@ -111,14 +108,22 @@ export default function LeadsPage() {
                           {lead.status}
                         </span>
                       </TableCell>
+                      
+                      {/* --- AICI AM PUS BUTONUL DE EDIT --- */}
                       <TableCell className="text-right">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDelete(lead.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex justify-end items-center gap-1">
+                            
+                            <EditLeadDialog lead={lead} onUpdate={fetchLeaduri} />
+
+                            <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleDelete(lead.id)}
+                            className="cursor-pointer h-8 w-8 hover:text-red-600 hover:bg-red-50"
+                            >
+                            <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

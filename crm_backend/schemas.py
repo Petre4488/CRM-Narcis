@@ -3,8 +3,8 @@ from typing import Optional, List
 from datetime import date, datetime
 # Importam Enum-urile din models ca sa validam strict
 from models import (
-    StatusFactura, StatusSesiune, TipInstitutie, StatusPartener, StatusLead, 
-    TipContractHR, ModCalculPret, StatusGrupa
+    StatusFactura, StatusInscriere, StatusSesiune, TipInstitutie, StatusPartener, StatusLead, 
+    TipContractHR, ModCalculPret, StatusGrupa, TipMiscareStoc
 )
 
 # ======================= 1. CRM & SALES =======================
@@ -197,5 +197,129 @@ class FacturaCreate(FacturaBase):
 class Factura(FacturaBase):
     id: int
     created_at: datetime
+    class Config:
+        from_attributes = True
+        
+# ... (dupa Factura)
+
+# ======================= 8. INSCRIERI (LEGATURA ELEV-GRUPA) =======================
+
+class InscriereBase(BaseModel):
+    grupa_id: int
+    elev_id: int
+    data_inscriere: date
+    status_inscriere: StatusInscriere = StatusInscriere.ACTIV
+    tip_plata: Optional[str] = None # ex: "standard", "bursa"
+    reducere_percent: Optional[float] = 0.0
+    note: Optional[str] = None
+
+class InscriereCreate(InscriereBase):
+    pass
+
+class Inscriere(InscriereBase):
+    id: int
+    class Config:
+        from_attributes = True
+        
+# ... (dupa Inscriere)
+
+# ======================= 9. CATALOG (PREZENTE) =======================
+
+class PrezentaBase(BaseModel):
+    sesiune_id: int
+    inscriere_id: int
+    is_prezent: bool = False
+    motiv_absenta: Optional[str] = None
+    rating_profesor: Optional[int] = None # 1-5 stele
+    note: Optional[str] = None
+
+class PrezentaCreate(PrezentaBase):
+    pass
+
+class Prezenta(PrezentaBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+# Schema speciala pentru a trimite lista catre frontend usor
+class CatalogItem(BaseModel):
+    elev_id: int
+    nume_elev: str
+    inscriere_id: int
+    prezenta_id: Optional[int] = None
+    is_prezent: bool = False # Default Absent daca nu e marcat
+    motiv_absenta: Optional[str] = None
+    note: Optional[str] = None
+    rating_profesor: Optional[int] = 0
+    
+# ... (dupa CatalogItem)
+
+# ======================= 10. INVENTAR & LOGISTICA =======================
+
+class ProdusBase(BaseModel):
+    nume_produs: str
+    cod_sku: Optional[str] = None
+    categorie: str = "General" # ex: Kit, Consumabil, Echipament
+    unitate_masura: str = "buc"
+    cost_unitar_mediu: Optional[float] = 0.0
+    note: Optional[str] = None
+
+class ProdusCreate(ProdusBase):
+    pass
+
+class Produs(ProdusBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+class MiscareStocBase(BaseModel):
+    produs_id: int
+    tip: TipMiscareStoc # achizitie_in, consum_out, etc.
+    cantitate: int
+    note: Optional[str] = None
+    # Putem lega miscarea de un profesor sau grupa (optional)
+    profesor_id: Optional[int] = None
+    grupa_id: Optional[int] = None
+
+class MiscareStocCreate(MiscareStocBase):
+    pass
+
+class MiscareStoc(MiscareStocBase):
+    id: int
+    data_miscare: datetime
+    class Config:
+        from_attributes = True
+
+# Schema extinsa pentru a afisa stocul calculat in lista
+class ProdusCuStoc(Produs):
+    stoc_curent: int
+    
+    
+# ... (dupa ProdusCuStoc)
+
+# ======================= 11. SETARI =======================
+
+class SettingsBase(BaseModel):
+    nume_institutiei: str
+    adresa_fizica: Optional[str] = None
+    email_contact: Optional[str] = None
+    telefon_contact: Optional[str] = None
+    an_scolar_curent: str
+
+    nume_legala_firma: Optional[str] = None
+    cui: Optional[str] = None
+    reg_com: Optional[str] = None
+    banca: Optional[str] = None
+    iban: Optional[str] = None
+    serie_facturi: str
+    numar_curent_factura: int
+    moneda_default: str
+    tva_percent: float
+
+class SettingsCreate(SettingsBase):
+    pass
+
+class Settings(SettingsBase):
+    id: int
     class Config:
         from_attributes = True

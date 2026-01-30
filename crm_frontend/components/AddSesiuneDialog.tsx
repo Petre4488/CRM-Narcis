@@ -90,7 +90,7 @@ export function AddSesiuneDialog({ onSesiuneAdded }: { onSesiuneAdded: () => voi
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30 gap-2 px-6 rounded-full">
+        <Button className="bg-emerald-600 cursor-pointer hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30 gap-2 px-6 rounded-full">
           <Plus className="h-4 w-4" /> Sesiune Nouă
         </Button>
       </DialogTrigger>
@@ -118,7 +118,7 @@ export function AddSesiuneDialog({ onSesiuneAdded }: { onSesiuneAdded: () => voi
                     <Label className={labelStyle}><Users className="h-3.5 w-3.5"/> Grupă</Label>
                     <Select value={formData.grupa_id} onValueChange={handleGrupaChange}>
                         <SelectTrigger className={inputStyle}><SelectValue placeholder="Alege grupa..." /></SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-emerald-400">
                             {grupe.map(g => <SelectItem key={g.id} value={g.id.toString()}>{g.nume_grupa}</SelectItem>)}
                         </SelectContent>
                     </Select>
@@ -127,7 +127,7 @@ export function AddSesiuneDialog({ onSesiuneAdded }: { onSesiuneAdded: () => voi
                     <Label className={labelStyle}><GraduationCap className="h-3.5 w-3.5"/> Profesor</Label>
                     <Select value={formData.profesor_id} onValueChange={v => setFormData({...formData, profesor_id: v})}>
                         <SelectTrigger className={inputStyle}><SelectValue placeholder="Profesor..." /></SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-emerald-400">
                             {profesori.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.nume_complet}</SelectItem>)}
                         </SelectContent>
                     </Select>
@@ -163,8 +163,8 @@ export function AddSesiuneDialog({ onSesiuneAdded }: { onSesiuneAdded: () => voi
             </div>
 
             <DialogFooter>
-                <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Anulează</Button>
-                <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
+                <Button className="cursor-pointer bg-emerald-800/40 hover:bg-red-800/40" type="button" variant="ghost" onClick={() => setOpen(false)}>Anulează</Button>
+                <Button type="submit" disabled={loading} className="bg-emerald-600  hover:bg-emerald-700 text-white shadow-md cursor-pointer">
                     {loading ? "..." : "Salvează în Orar"}
                 </Button>
             </DialogFooter>

@@ -49,7 +49,7 @@ export function EditElevDialog({ elev, onElevUpdated }: { elev: Elev; onElevUpda
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-black hover:bg-slate-100">
+        <Button variant="ghost" size="icon" className="cursor-pointer h-8 w-8 text-black hover:bg-slate-100">
             <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -124,7 +124,7 @@ export function EditElevDialog({ elev, onElevUpdated }: { elev: Elev; onElevUpda
                     <p className="text-xs text-slate-500">Status acord actual.</p>
                 </div>
              </div>
-            <Switch checked={formData.gdpr_accepted} onCheckedChange={(c) => setFormData({...formData, gdpr_accepted: c})} className="data-[state=checked]:bg-green-600" />
+            <Switch checked={formData.gdpr_accepted} onCheckedChange={(c) => setFormData({...formData, gdpr_accepted: c})} className="data-[state=checked]:bg-green-600 cursor-pointer" />
           </div>
 
           <DialogFooter>

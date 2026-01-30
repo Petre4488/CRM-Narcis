@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { User, Mail, Phone, Briefcase, Banknote, Calendar, Plus, GraduationCap } from "lucide-react";
 
 export function AddProfesorDialog({ onProfesorAdded }: { onProfesorAdded: () => void }) {
   const [open, setOpen] = useState(false);
@@ -38,12 +40,10 @@ export function AddProfesorDialog({ onProfesorAdded }: { onProfesorAdded: () => 
     e.preventDefault();
     setLoading(true);
 
-    // Pregatim datele (convertim tariful la numar)
     const payload = {
       ...formData,
       tarif_orar_default: parseFloat(formData.tarif_orar_default) || 0,
-      // Daca data e goala, o lasam null sau o ignoram (backend-ul o poate face optionala)
-      data_start: formData.data_start || null, 
+      data_start: formData.data_start || null,
       is_active: true
     };
 
@@ -77,96 +77,115 @@ export function AddProfesorDialog({ onProfesorAdded }: { onProfesorAdded: () => 
     }
   };
 
+  const labelStyle = "flex items-center gap-2 text-slate-700 text-sm font-semibold mb-1.5";
+  const inputStyle = "bg-white border-slate-300 text-slate-900 focus-visible:ring-blue-500 focus-visible:border-blue-500 h-10 shadow-sm";
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-          + Adaugă Profesor
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30 gap-2 px-6 rounded-full cursor-pointer">
+          <Plus className="h-4 w-4" /> Adaugă Profesor
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Profesor Nou</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-150 bg-white border border-slate-200 shadow-2xl p-0 overflow-hidden rounded-2xl">
+        <div className="bg-blue-50 p-6 border-b border-blue-100">
+            <DialogHeader>
+                <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-slate-900">
+                    <div className="bg-white p-2 rounded-lg shadow-sm text-blue-600">
+                        <GraduationCap className="h-5 w-5 fill-blue-100" />
+                    </div>
+                    Profesor Nou
+                </DialogTitle>
+                <DialogDescription className="text-slate-600">
+                    Adaugă un cadru didactic în echipă.
+                </DialogDescription>
+            </DialogHeader>
+        </div>
 
-        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6 bg-white">
           
-          {/* Nume */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="nume" className="text-right">Nume</Label>
+          {/* NUME */}
+          <div>
+            <Label htmlFor="nume" className={labelStyle}><User className="h-3.5 w-3.5"/> Nume Complet</Label>
             <Input 
-              id="nume" 
-              value={formData.nume_complet} 
-              onChange={(e) => setFormData({...formData, nume_complet: e.target.value})} 
-              className="col-span-3" required 
+                id="nume" 
+                value={formData.nume_complet} 
+                onChange={(e) => setFormData({...formData, nume_complet: e.target.value})} 
+                className={inputStyle} required 
+                placeholder="Ex: Popescu Maria"
             />
           </div>
 
-          {/* Contact (Email / Tel) */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="email" className="text-right">Email</Label>
-            <Input 
-              id="email" type="email"
-              value={formData.email} 
-              onChange={(e) => setFormData({...formData, email: e.target.value})} 
-              className="col-span-3" 
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tel" className="text-right">Telefon</Label>
-            <Input 
-              id="tel" 
-              value={formData.telefon} 
-              onChange={(e) => setFormData({...formData, telefon: e.target.value})} 
-              className="col-span-3" 
-            />
-          </div>
-
-          {/* Tip Contract */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">Contract</Label>
-            <div className="col-span-3">
-              <Select 
-                value={formData.tip_contract}
-                onValueChange={(val) => setFormData({...formData, tip_contract: val})}
-              >
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="cim">CIM (Angajat)</SelectItem>
-                  <SelectItem value="pfa">PFA</SelectItem>
-                  <SelectItem value="srl">SRL</SelectItem>
-                  <SelectItem value="voluntariat">Voluntariat</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* EMAIL & TELEFON */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <Label htmlFor="email" className={labelStyle}><Mail className="h-3.5 w-3.5"/> Email</Label>
+                <Input 
+                    id="email" type="email"
+                    value={formData.email} 
+                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                    className={inputStyle} 
+                />
+              </div>
+              <div>
+                <Label htmlFor="tel" className={labelStyle}><Phone className="h-3.5 w-3.5"/> Telefon</Label>
+                <Input 
+                    id="tel" 
+                    value={formData.telefon} 
+                    onChange={(e) => setFormData({...formData, telefon: e.target.value})} 
+                    className={inputStyle} 
+                />
+              </div>
           </div>
 
-          {/* Tarif Orar */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tarif" className="text-right">Tarif (RON/h)</Label>
-            <Input 
-              id="tarif" type="number" step="0.5"
-              value={formData.tarif_orar_default} 
-              onChange={(e) => setFormData({...formData, tarif_orar_default: e.target.value})} 
-              className="col-span-3" 
-            />
+          {/* CONTRACT & TARIF */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <Label className={labelStyle}><Briefcase className="h-3.5 w-3.5"/> Tip Contract</Label>
+                <Select 
+                    value={formData.tip_contract}
+                    onValueChange={(val) => setFormData({...formData, tip_contract: val})}
+                >
+                    <SelectTrigger className={inputStyle}><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-blue-400">
+                        <SelectItem value="cim" className="hover:bg-blue-500 cursor-pointer">CIM (Angajat)</SelectItem>
+                        <SelectItem value="srl" className="hover:bg-blue-500 cursor-pointer">SRL (B2B)</SelectItem>
+                        <SelectItem value="pfa" className="hover:bg-blue-500 cursor-pointer">PFA</SelectItem>
+                        <SelectItem value="voluntariat" className="hover:bg-blue-500 cursor-pointer">Voluntariat</SelectItem>
+                    </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="tarif" className={labelStyle}><Banknote className="h-3.5 w-3.5"/> Tarif (RON/h)</Label>
+                <Input 
+                    id="tarif" type="number" step="0.5"
+                    value={formData.tarif_orar_default} 
+                    onChange={(e) => setFormData({...formData, tarif_orar_default: e.target.value})} 
+                    className={inputStyle} 
+                    placeholder="0.00"
+                />
+              </div>
           </div>
 
-           {/* Data Start */}
-           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="data" className="text-right">Data Start</Label>
+           {/* DATA START */}
+           <div>
+            <Label htmlFor="data" className={labelStyle}><Calendar className="h-3.5 w-3.5"/> Data Începere</Label>
             <Input 
-              id="data" type="date"
-              value={formData.data_start} 
-              onChange={(e) => setFormData({...formData, data_start: e.target.value})} 
-              className="col-span-3" 
+                id="data" type="date"
+                value={formData.data_start} 
+                onChange={(e) => setFormData({...formData, data_start: e.target.value})} 
+                className={inputStyle} 
             />
           </div>
 
           <DialogFooter>
-            <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
-              {loading ? "Se salvează..." : "Salvează Profesor"}
+            <Button className="cursor-pointer bg-blue-800/10 text-blue-900 hover:bg-red-50 hover:text-red-600" type="button" variant="ghost" onClick={() => setOpen(false)}>
+                Anulează
+            </Button>
+            <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white shadow-md cursor-pointer">
+                {loading ? "..." : "Salvează Profesor"}
             </Button>
           </DialogFooter>
         </form>

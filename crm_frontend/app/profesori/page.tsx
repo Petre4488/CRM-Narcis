@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trash2, Phone, Mail } from "lucide-react";
 import { AddProfesorDialog } from "@/components/AddProfesorDialog";
+import { EditProfesorDialog } from "@/components/EditProfesorDialog"; // <--- IMPORTAT
 
 export default function ProfesoriPage() {
   const [profesori, setProfesori] = useState<Profesor[]>([]);
@@ -50,7 +51,7 @@ export default function ProfesoriPage() {
       <h1 className="text-3xl font-bold mb-6 text-slate-800">Echipa & HR</h1>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="text-black flex flex-row items-center justify-between">
           <CardTitle>Profesori & Colaboratori</CardTitle>
           <AddProfesorDialog onProfesorAdded={fetchProfesori} />
         </CardHeader>
@@ -103,9 +104,9 @@ export default function ProfesoriPage() {
                       
                       {/* Tip Contract - Badge Albastru */}
                       <TableCell>
-                         <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold uppercase">
+                          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold uppercase">
                             {p.tip_contract}
-                         </span>
+                          </span>
                       </TableCell>
                       
                       {/* Tarif - Verde */}
@@ -115,22 +116,27 @@ export default function ProfesoriPage() {
                       
                       {/* Status - Activ/Inactiv */}
                       <TableCell>
-                         <span className={`px-2 py-1 rounded text-xs text-white uppercase font-bold
+                          <span className={`px-2 py-1 rounded text-xs text-white uppercase font-bold
                             ${p.is_active ? 'bg-emerald-500' : 'bg-slate-400'}`}>
                             {p.is_active ? "Activ" : "Inactiv"}
-                         </span>
+                          </span>
                       </TableCell>
 
-                      {/* Actiuni */}
+                      {/* --- AICI AM PUS BUTONUL DE EDIT --- */}
                       <TableCell className="text-right">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 hover:text-red-600 hover:bg-red-50"
-                            onClick={() => handleDelete(p.id)}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <div className="flex justify-end items-center gap-1">
+                            
+                            <EditProfesorDialog profesor={p} onUpdate={fetchProfesori} />
+
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:text-red-600 cursor-pointer hover:bg-red-50"
+                                onClick={() => handleDelete(p.id)}
+                            >
+                                <Trash2 className="h-4 w-4 text-black" />
+                            </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

@@ -90,7 +90,7 @@ export function EditSesiuneDialog({ sesiune, onSesiuneUpdated }: EditSesiuneProp
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-black hover:bg-slate-100">
+        <Button variant="ghost" size="icon" className="cursor-pointer h-8 w-8 text-black hover:bg-slate-100">
             <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -99,7 +99,7 @@ export function EditSesiuneDialog({ sesiune, onSesiuneUpdated }: EditSesiuneProp
         <div className="bg-emerald-50 p-6 border-b border-emerald-100">
             <DialogHeader>
                 <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-slate-900">
-                    <div className="bg-white p-2 rounded-lg shadow-sm text-emerald-600">
+                    <div className="cursor-pointer bg-white p-2 rounded-lg shadow-sm text-emerald-600">
                         <Pencil className="h-5 w-5 fill-emerald-100" />
                     </div>
                     Editare Sesiune
@@ -176,7 +176,7 @@ export function EditSesiuneDialog({ sesiune, onSesiuneUpdated }: EditSesiuneProp
             </div>
 
             <DialogFooter>
-                <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Anulează</Button>
+                <Button type="button" variant="ghost" className="text-black cursor-pointer hover:bg-red-600/30" onClick={() => setOpen(false)}>Anulează</Button>
                 <Button type="submit" disabled={loading} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
                     {loading ? "..." : "Salvează Modificările"}
                 </Button>
